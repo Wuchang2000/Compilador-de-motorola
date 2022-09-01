@@ -24,7 +24,6 @@ for cont, i in enumerate(direc):
 def formaterMemory(x):
     # Caso hexadecimal
     if '$' in x:
-        print(x)
         busq = search(r'\$[0-9a-f]{1,4}', x)
         if busq != None:
             return x[busq.start()+1:busq.end()]
@@ -45,34 +44,34 @@ def formaterMemory(x):
         else:
             return None
 
-def corresponde(line, clase):
+def corresponde(instruccion, line, clase):
     busq = search(r'.[ ]{1,}', line)
     loc = line[busq.end():len(line)-1]
     memory = formaterMemory(loc)
     if 'IMM' in clase:
         if '#' in line:
             if memory != None and int(memory, 16) <= middle:
-                return ['IMM', f'{memory.upper()}']
+                return [instruccion, 'IMM', f'{memory.upper()}']
             else:
-                return ['IMM', '', 1]
+                return [instruccion, 'IMM', '', 1]
     if 'IND,X' in clase or 'IND,Y' in clase:
         if ',y' in loc:
             if memory != None and int(memory, 16) <= maxim:
-                return ['IND,Y', f'{memory.upper()}']
+                return [instruccion, 'IND,Y', f'{memory.upper()}']
             else:
-                return ['IND,Y', '', 1]
+                return [instruccion, 'IND,Y', '', 1]
         elif ',x' in loc:
             if memory != None and int(memory, 16) <= maxim:
-                return ['IND,X', f'{memory.upper()}']
+                return [instruccion, 'IND,X', f'{memory.upper()}']
             else:
-                return ['IND,X', '', 1]
+                return [instruccion, 'IND,X', '', 1]
     if 'DIR' in clase or 'EXT' in clase:
         if memory != None and int(memory, 16) <= middle:
-            return ['DIR', f'{memory.upper()}']
+            return [instruccion, 'DIR', f'{memory.upper()}']
         elif memory != None and int(memory, 16) <= maxim:
-            return ['EXT', f'{memory.upper()}']
+            return [instruccion, 'EXT', f'{memory.upper()}']
         else:
-            return ['EXT', '', 1]
+            return [instruccion, 'EXT', '', 1]
 
     return None
 
@@ -83,27 +82,33 @@ def revision(line):
     # Funcion anonima para transformar fila en operacion
     transform = lambda x: ints['Operación'][x]
     clase = []
-    # Recorremos el conjunto de directivas
-    for i in range(7):
-        # Recorremos las operaciones en palabras
-        for j in transform(ints_c[i][3]):
-            # Verificamos si se puede separar en varias palabras
-            if line.split(' '):
-                # Si contiene la operacion se guarda el tipo de directiva
-                if j == line.split(' ')[0]:
-                    clase.append(direc[i])
-            else:
-                # Si contiene la operacion se guarda el tipo de directiva
-                if j == line:
-                    clase.append(direc[i])
-    
+    if search(r'$[ ]{1,}', line) == None:
+        # Instruccion dada
+        instruccion = ''
+        # Recorremos el conjunto de directivas
+        for i in range(7):
+            # Recorremos las operaciones en palabras
+            for j in transform(ints_c[i][3]):
+                # Verificamos si se puede separar en varias palabras
+                if line.split(' '):
+                    # Si contiene la operacion se guarda el tipo de directiva
+                    if j == line.split(' ')[0]:
+                        clase.append(direc[i])
+                        instruccion = j
+                else:
+                    # Si contiene la operacion se guarda el tipo de directiva
+                    if j == line:
+                        clase.append(direc[i])
+                        instruccion = j
+        
     # En caso de tener mas de un tipo de directiva se revisa a cual
     # le corresponde
     if len(clase) > 1:
-        clase = corresponde(line, clase)
-
-    if len(clase) == 0:
-        clase = ['Etiqueta']
+        clase = corresponde(instruccion.upper(), line, clase)
+    elif len(clase) == 0:
+        clase = [line.upper(), 'Etiqueta']
+    elif len(clase) == 1:
+        clase = [instruccion.upper(), clase[0]]
 
     return clase
 
@@ -115,14 +120,15 @@ with open('code.asm') as file:
     code = list(map(lambda x : x.replace('\n', ''), code))
     # Arreglo de infomacion de cada linea
     info = []
-    # Verificamos si se tiene el inicio y el fin
-    if 'ORG' in code[0] and 'END' in code[len(code)-1]:
-        # Recorremos todas las lineas de codigo
-        for cont, i in enumerate(code):
+    # Recorremos todas las lineas de codigo
+    for cont, i in enumerate(code):
+        # Salimos del recorrido si se encuentra el termino del codigo
+        if 'END' in i:
+            break
+        elif 'ORG' in i:
+            pass
+        else:
             # Revisamos cada linea sacando su directiva
-            if cont != 0 and cont != len(code)-1:
-                info.append(revision(i))
-        
-        print(info)
-    else:
-        print('No tiene inicio o fin')
+            info.append(revision(i))
+    
+    print(info)
