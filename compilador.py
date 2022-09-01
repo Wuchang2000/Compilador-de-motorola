@@ -37,6 +37,7 @@ def formaterMemory(x):
             pass
         else:
             return None
+    # Caso de numero decimal
     else:
         busq = search(rf'.[0-9]{maxim}', x)
         if busq != None:
