@@ -1,6 +1,9 @@
 from pandas import read_excel as xls
 from re import search
 
+#Valores maximmos y minimos
+middle = 255
+maxim = 65535
 # Extraccion de instrucciones
 ints = xls('instrucciones.xls')
 # Rellenamos espacios vacios
@@ -8,6 +11,8 @@ ints.fillna('#', inplace=True)
 # Dividimos las directivas
 direc = ['INH', 'IMM', 'DIR', 'EXT', 'IND,X', 'IND,Y', 'REL']
 ints_c = []
+# Codigos de errores
+error = {1 : 'out of memory'}
 # Recorremos las directivas
 for cont, i in enumerate(direc):
     # Separamos las directivas por tipo
@@ -16,23 +21,57 @@ for cont, i in enumerate(direc):
     op = [x for x in ints.index if ints[ints_c[cont][0]][x] != '#']
     ints_c[cont].append(op)
 
+def formaterMemory(x):
+    # Caso hexadecimal
+    if '$' in x:
+        print(x)
+        busq = search(r'\$[0-9a-f]{1,4}', x)
+        if busq != None:
+            return x[busq.start()+1:busq.end()]
+        else:
+            return None
+    # Caso de numero ascii
+    elif '\'' in x:
+        busq = search(r'\'[0-9a-f]{1}', x)
+        if busq != None:
+            pass
+        else:
+            return None
+    else:
+        busq = search(rf'.[0-9]{maxim}', x)
+        if busq != None:
+            return hex(x[busq.start()+1:busq.end()])
+        else:
+            return None
+
 def corresponde(line, clase):
+    busq = search(r'.[ ]{1,}', line)
+    loc = line[busq.end():len(line)-1]
+    memory = formaterMemory(loc)
     if 'IMM' in clase:
         if '#' in line:
-            return ['IMM']
+            if memory != None and int(memory, 16) <= middle:
+                return ['IMM', f'{memory.upper()}']
+            else:
+                return ['IMM', '', 1]
     if 'IND,X' in clase or 'IND,Y' in clase:
-        if ',y' in line.split(' ')[1]:
-            return ['IND,Y']
-        elif ',x' in line.split(' ')[1]:
-            return ['IND,X']
-    if 'DIR' in clase:
-        loc = line.split()[1]
-        if '$' in loc:
-            loc = loc.replace('$', '')
-        if len(loc) < 4:
-            loc = ((4-len(loc))*'0')+loc
-        if search(r'^00([0-9a-f]{2})$', loc) != None:
-            return ['DIR']
+        if ',y' in loc:
+            if memory != None and int(memory, 16) <= maxim:
+                return ['IND,Y', f'{memory.upper()}']
+            else:
+                return ['IND,Y', '', 1]
+        elif ',x' in loc:
+            if memory != None and int(memory, 16) <= maxim:
+                return ['IND,X', f'{memory.upper()}']
+            else:
+                return ['IND,X', '', 1]
+    if 'DIR' in clase or 'EXT' in clase:
+        if memory != None and int(memory, 16) <= middle:
+            return ['DIR', f'{memory.upper()}']
+        elif memory != None and int(memory, 16) <= maxim:
+            return ['EXT', f'{memory.upper()}']
+        else:
+            return ['EXT', '', 1]
 
     return None
 
@@ -62,9 +101,10 @@ def revision(line):
     if len(clase) > 1:
         clase = corresponde(line, clase)
 
-    print(clase)
+    if len(clase) == 0:
+        clase = ['Etiqueta']
 
-    return True
+    return clase
 
 # Intenta abrir el archivo con codigo
 with open('code.asm') as file:
@@ -72,13 +112,16 @@ with open('code.asm') as file:
     code = [x for x in file if x != '\n']
     # Remplazamos los saltos de linea por vacio 
     code = list(map(lambda x : x.replace('\n', ''), code))
+    # Arreglo de infomacion de cada linea
+    info = []
     # Verificamos si se tiene el inicio y el fin
     if 'ORG' in code[0] and 'END' in code[len(code)-1]:
         # Recorremos todas las lineas de codigo
         for cont, i in enumerate(code):
             # Revisamos cada linea sacando su directiva
-            if cont != 0 and cont != len(code)-1 \
-                and revision(i) == False:
-                print('Hay un error')
+            if cont != 0 and cont != len(code)-1:
+                info.append(revision(i))
+        
+        print(info)
     else:
         print('No tiene inicio o fin')

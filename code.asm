@@ -2,28 +2,14 @@ ORG $8000
 
 NOP
 
-INX
-
-DEX
-
-INY
-
-DEY
-
-MUL
-
-XGDX
-
-XGDY
-
-NEGA
-
-NEGB
-
 ADCA #$F0
 
 LDAA $45,X
 
 LDY $AB
+
+CICLO
+
+LDAA  $457C
 
 END
