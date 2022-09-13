@@ -10,6 +10,8 @@ LDY $AB
 
 CICLO
 
-LDAA  $457C
+LDAA  $457C   *Buenas
+
+*Buenas 
 
 END

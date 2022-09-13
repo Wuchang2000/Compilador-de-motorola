@@ -86,7 +86,7 @@ def revision(line):
         # Instruccion dada
         instruccion = ''
         # Recorremos el conjunto de directivas
-        for i in range(7):
+        for i in range(len(direc)):
             # Recorremos las operaciones en palabras
             for j in transform(ints_c[i][3]):
                 # Verificamos si se puede separar en varias palabras
@@ -127,8 +127,15 @@ with open('code.asm') as file:
             break
         elif 'ORG' in i:
             pass
+        # Salta comentario de linea
+        elif search(r'^\*.', i) != None:
+            pass
         else:
+            temp = revision(i)
+            temp.insert(0, cont)
             # Revisamos cada linea sacando su directiva
-            info.append(revision(i))
+            info.append(temp)
     
-    print(info)
+    # Impresion de lineas con formato
+    for i in info:
+        print(i)
