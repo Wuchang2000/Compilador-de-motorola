@@ -11,6 +11,7 @@ ints.fillna('#', inplace=True)
 # Dividimos las directivas
 direc = ['INH', 'IMM', 'DIR', 'EXT', 'IND,X', 'IND,Y', 'REL']
 ints_c = []
+inicio = 0
 # Codigos de errores
 error = {1 : 'out of memory'}
 # Recorremos las directivas
@@ -51,6 +52,7 @@ def corresponde(instruccion, line, clase):
     if 'IMM' in clase:
         if '#' in line:
             if memory != None and int(memory, 16) <= middle:
+                to_opcode(instruccion, 'IMM')
                 return [instruccion, 'IMM', f'{memory.upper()}']
             else:
                 return [instruccion, 'IMM', '', 1]
@@ -75,6 +77,10 @@ def corresponde(instruccion, line, clase):
 
     return None
 
+# Busca el opcode de la instruccion dada
+def to_opcode(instruccion, directiva):
+    row = ints[ints.Operación.str.contains(instruccion.lower(), na=False)]
+    return row[f'OPCODE {directiva}'].values[0]
 
 def revision(line):
     # Minusculas
@@ -105,12 +111,46 @@ def revision(line):
     # le corresponde
     if len(clase) > 1:
         clase = corresponde(instruccion.upper(), line, clase)
+        clase[0] = to_opcode(clase[0], clase[1])
     elif len(clase) == 0:
         clase = [line.upper(), 'Etiqueta']
     elif len(clase) == 1:
-        clase = [instruccion.upper(), clase[0]]
+        clase = [to_opcode(instruccion, clase[0]), clase[0]]
 
     return clase
+
+def s19():
+    # genera el arhivo s19
+    with open('./code.s19', 'w') as file:
+        file.write(f'<{inicio}> ')
+        cont = 0
+        nex_pos = inicio
+        for i in info:
+            if i[2] != 'Etiqueta':
+                if type(i[1]) == str and len(i[1]) == 3:
+                    l = i[1].replace(' ', '')
+                    file.write(f'{l} ')
+                    cont += 1
+                elif type(i[1]) == str and len(i[1]) == 5:
+                    if cont+2 > 16:
+                        high = i[1].split(' ')[0]
+                        file.write(f'{high} ')
+                        nex_pos = hex(int(nex_pos, 16)+16)
+                        file.write(f'\n<{nex_pos[2:]}> ')
+                        cont = 0
+                        low = i[1].split(' ')[1]
+                        file.write(f'{low} ')
+                        cont += 1
+                    else:
+                        file.write(f'{i[1]} ')
+                        cont += 2
+                else:
+                    file.write(f'{i[1]} ')
+                    cont += 1
+                if cont == 16:
+                    nex_pos = hex(int(nex_pos, 16)+16)
+                    file.write(f'\n<{nex_pos[2:]}> ')
+                    cont = 0
 
 # Intenta abrir el archivo con codigo
 with open('code.asm') as file:
@@ -126,6 +166,8 @@ with open('code.asm') as file:
         if 'END' in i:
             break
         elif 'ORG' in i:
+            busq = search(r'\$[0-9]{1,4}', i)
+            inicio = i[busq.start()+1:busq.end()]
             pass
         # Salta comentario de linea
         elif search(r'^\*.', i) != None:
@@ -136,6 +178,4 @@ with open('code.asm') as file:
             # Revisamos cada linea sacando su directiva
             info.append(temp)
     
-    # Impresion de lineas con formato
-    for i in info:
-        print(i)
+    s19()
