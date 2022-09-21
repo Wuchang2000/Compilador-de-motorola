@@ -119,38 +119,82 @@ def revision(line):
 
     return clase
 
+def divisionHexa(file, cont, i, nex_pos, idx):
+    if cont+2 > 16:
+        # Escritura de parte alta del hexa
+        high = i[idx].split(' ')[0]
+        file.write(f'{high} ')
+        nex_pos = hex(int(nex_pos, 16)+16)
+        # Escritura de nueva posicion del hexa
+        file.write(f'\n<{nex_pos[2:]}> ')
+        cont = 0
+        low = i[idx].split(' ')[1]
+        # Escritura de parte baja del hexa
+        file.write(f'{low} ')
+        cont += 1
+    # Se colocan los dos hexa
+    else:
+        file.write(f'{i[idx]} ')
+        cont += 2
+    
+    return cont, nex_pos
+
 def s19():
     # genera el arhivo s19
     with open('./code.s19', 'w') as file:
+        # Escribimos el lugar en memoria donde inicia el programa
         file.write(f'<{inicio}> ')
         cont = 0
         nex_pos = inicio
+        cont2 = len(info)
+        # Recorremos el arreglo de operaciones
         for i in info:
+            # Si es una etiqueta la saltamos
             if i[2] != 'Etiqueta':
+                print(i)
+                # Si tiene tamaño 3 significa que tiene un espacio
+                # y es un numero hexa de dos caracteres
                 if type(i[1]) == str and len(i[1]) == 3:
                     l = i[1].replace(' ', '')
                     file.write(f'{l} ')
                     cont += 1
+                # Si tiene tamaño 5 significa que tiene un espacio
+                # y es dos numeros hexa de dos caracteres
                 elif type(i[1]) == str and len(i[1]) == 5:
-                    if cont+2 > 16:
-                        high = i[1].split(' ')[0]
-                        file.write(f'{high} ')
-                        nex_pos = hex(int(nex_pos, 16)+16)
-                        file.write(f'\n<{nex_pos[2:]}> ')
-                        cont = 0
-                        low = i[1].split(' ')[1]
-                        file.write(f'{low} ')
-                        cont += 1
-                    else:
-                        file.write(f'{i[1]} ')
-                        cont += 2
+                    # Si se pasa de los 16 bits al colocar dos hexa
+                    # se hace un salto de linea (uno y uno)
+                    cont, nex_pos = divisionHexa(file, cont, i, nex_pos, 1)
+                # No tiene espacios entonces se puede escribir
                 else:
                     file.write(f'{i[1]} ')
                     cont += 1
-                if cont == 16:
+                # Seccion que coloca los valores hexadecimales
+                # de las instrucciones
+                if len(i) > 3:
+                    # Si el tamaño del valor es 4 se colocan los dos valores
+                    if len(i[3]) == 4:
+                        i[3] = f'{i[3][0:2]} {i[3][2:]}'
+                        cont, nex_pos = divisionHexa(file, cont, i, nex_pos, 3)
+                    # Si el tamaño del valor es 1 se agrega un cero al inicio 
+                    elif len(i[3]) == 1:
+                        file.write(f'0{i[3]} ')
+                        cont += 1
+                    # Si el tamaño del valor es 3 se agrega un cero al inicio 
+                    elif len(i[3]) == 3:
+                        i[3] = f'0{i[3][1]} {i[3][2:]}'
+                        cont, nex_pos = divisionHexa(file, cont, i, nex_pos, 3)
+                    # No tiene espacios entonces se puede escribir
+                    else:
+                        file.write(f'{i[3]} ')
+                        cont += 1
+                # Si ya se escribieron 16 caracteres se
+                # hace un salto de linea con la nueva posicion en memoria
+                # pero solo si todavia existen lineas analizables
+                if cont == 16 and cont2-1 > 0:
                     nex_pos = hex(int(nex_pos, 16)+16)
                     file.write(f'\n<{nex_pos[2:]}> ')
                     cont = 0
+            cont2 -= 1
 
 # Intenta abrir el archivo con codigo
 with open('code.asm') as file:
