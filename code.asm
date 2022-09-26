@@ -1,20 +1,20 @@
-ORG $8000
+    ORG $8000
 
-NOP
+    NOP
 
-ADCA #$F0
+    ADCA #$F0
 
-LDAA $45,X
+    LDAA $45,X
 
-LDY $AB
-LDAA $45,X
+    LDY $AB
+    LDAA $45,X
 
-LDY $AB
+    LDY $AB
 
 CICLO
 
-LDAA  $457C   *Buenas
+    LDAA  $457C   *Buenas
 
 *Buenas 
 
-END
+    END
