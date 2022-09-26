@@ -1,0 +1,24 @@
+    ORG $8000
+
+    NOP
+
+    ADCA #$F0
+
+    LDAA $45,X
+
+    LDY $AB
+    LDAA $45,X
+
+    LDY $AB
+
+CICLO
+
+    LDAA  $457CC   *Buenas
+MAGNITUD DE OPERANDO ERRONEA
+
+LDAA  $457C   *Buenas
+INSTRUCCIÓN CARECE DE AL MENOS UN ESPACIO RELATIVO AL MARGEN
+
+*Buenas 
+
+    END
