@@ -1,7 +1,6 @@
-from math import inf
 from pandas import read_excel as xls
 from re import search
-from numpy import where
+from numpy import where, array
 
 #Valores maximmos y minimos
 middle = 255
@@ -12,7 +11,12 @@ ints = xls('instrucciones.xls')
 direc = ['INH', 'IMM', 'DIR', 'EXT', 'IND,X', 'IND,Y', 'REL']
 inicio = 0
 # Codigos de errores
-error = {'4' : 'MNEMÓNICO INEXISTENTE',
+error = {'1' : 'CONSTANTE INEXISTENTE',
+        '2' : 'VARIABLE INEXISTENTE',
+        '3' : 'ETIQUETA INEXISTENTE',
+        '4' : 'MNEMÓNICO INEXISTENTE',
+        '5' : 'INSTRUCCIÓN CARECE DE OPERANDOS',
+        '6' : 'INSTRUCCIÓN NO LLEVA OPERANDO(S)',
         '7' : 'MAGNITUD DE OPERANDO ERRONEA', 
         '9' : 'INSTRUCCIÓN CARECE DE AL MENOS UN ESPACIO RELATIVO AL MARGEN',
         '10' : 'NO SE ENCUENTRA END'}
@@ -29,7 +33,7 @@ def formaterMemory(x):
     elif '\'' in x:
         busq = search(r'\'[0-9a-f]{1}', x)
         if busq != None:
-            pass
+            return hex(x[busq.start()+1:busq.end()])
         else:
             return None
     # Caso de numero decimal
@@ -40,33 +44,117 @@ def formaterMemory(x):
         else:
             return None
 
+# Quita espacios inecesarios en las lineas de codigo
+def formatoLinea(line):
+    newLine = []
+    if len(line.split(' ')) > 3:
+        for i in line.split(' '):
+            if i:
+                newLine.append(i)
+
+    return newLine
+
+# Sustituye variables y constantes en sus valores 
+def susValue(file):
+    # Recorremos el codigo y le quitamos simbolos inservibles
+    file = array([x[1].replace('\n', '') for x in enumerate(file)])
+    # Recorremos el codigo para sustituir el
+    # valor de la constante/variable
+    for cont, i in enumerate(file):
+        # Si esta la instruccion EQU significa que existe
+        # una constante/variable
+        if 'EQU' in i and search(r'^\*.*EQU', i) == None:
+            # Conseguimos el nombre de la constante/variable
+            # y su valor
+            pseudo = formatoLinea(i)[0]
+            value = formatoLinea(i)[2].replace('\n', '')
+            # Recorremos el arreglo para sustituir por el valor
+            for cont1, j in enumerate(file):
+                if pseudo in j.split(' ') and i != j:
+                    file[cont1] = j.replace(pseudo, value)
+            # Quitamos la linea con la variable para evitar ruido
+            # en analisis posterior
+            file[cont] = ''
+            
+    # Retornamos el codigo modificado
+    return file
+
+# Funcion que encuentra la directiva a la que corresponde
 def corresponde(instruccion, line, clase):
-    busq = search(r'.[ ]{1,}', line)
-    loc = line[busq.end():len(line)]
-    memory = formaterMemory(loc)
+    # Quitamos los espacios del inicio de la instruccion
+    busq = search(r'.[ ]{1,}.', line)
+    if busq != None:
+        loc = line[busq.end()-1:len(line)]
+        # Extraemos el valor de la instruccion
+        memory = formaterMemory(loc)
+    # Metodo de direccionamiento inherente
+    if 'INH' in clase:
+        if busq != None:
+            # Error no lleva operando
+            return [instruccion, 'ERROR', 6]
+        else:
+            return [instruccion, 'INH']
+    if 'REL' in clase:
+        # Error por no llevar operandos
+        if busq == None:
+            return [instruccion, 'ERROR', 5]
+        # Error por etiqueta inexistente
+        elif True not in [True for x in info if type(x) == list and loc.upper() in x]:
+            return [instruccion, 'ERROR', 3]
+        else:
+            return [instruccion, 'REL']
+    # Metodo de direccionamiento inmediato
     if 'IMM' in clase:
         if '#' in line:
-            if memory != None and int(memory, 16) <= middle:
+            # Error por no llevar operandos
+            if busq == None:
+                return [instruccion, 'ERROR', 5]
+            elif memory != None and int(memory, 16) <= maxim:
                 to_opcode(instruccion, 'IMM')
                 return [instruccion, 'IMM', f'{memory.upper()}']
+            # Error por constante inexistente
+            elif memory == None:
+                return [instruccion, 'ERROR', 1]
+            # Error por magnitud erronea
             else:
                 return [instruccion, 'ERROR', 7]
+    # Metodo de direccionamiento indexado
     if 'IND,X' in clase or 'IND,Y' in clase:
-        if ',y' in loc:
+        # Error por no llevar operandos
+        if busq == None:
+            return [instruccion, 'ERROR', 5]
+        elif ',y' in loc:
             if memory != None and int(memory, 16) <= maxim:
                 return [instruccion, 'IND,Y', f'{memory.upper()}']
+            # Error por variable inexistente
+            elif memory == None:
+                return [instruccion, 'ERROR', 2]
+            # Error por magnitud erronea
             else:
                 return [instruccion, 'ERROR', 7]
         elif ',x' in loc:
             if memory != None and int(memory, 16) <= maxim:
                 return [instruccion, 'IND,X', f'{memory.upper()}']
+            # Error por variable inexistente
+            elif memory == None:
+                return [instruccion, 'ERROR', 2]
+            # Error por magnitud erronea
             else:
                 return [instruccion, 'ERROR', 7]
+    # Metodo de direccionamiento directo y extendido
     if 'DIR' in clase or 'EXT' in clase:
-        if memory != None and int(memory, 16) <= middle:
+        # Error por no llevar operandos
+        if busq == None:
+            return [instruccion, 'ERROR', 5]
+        # Comparacion de intervalo de hexa
+        elif memory != None and int(memory, 16) <= middle:
             return [instruccion, 'DIR', f'{memory.upper()}']
         elif memory != None and int(memory, 16) <= maxim:
             return [instruccion, 'EXT', f'{memory.upper()}']
+        # Error por variable inexistente
+        elif memory == None:
+            return [instruccion, 'ERROR', 2]
+        # Error por magnitud erronea
         else:
             return [instruccion, 'ERROR', 7]
 
@@ -77,9 +165,9 @@ def to_opcode(instruccion, directiva):
     row = ints[ints.Operación.str.contains(instruccion, na=False)]
     return row[f'OPCODE {directiva}'].values[0]
 
+# Busca la directiva, trata varias directivas asociada a la intruccion
+# encuentra etiquetas
 def revision(line):
-    # Minusculas
-    line = line.lower()
     # Funcion anonima para transformar fila en operacion
     # transform = lambda x: ints['Operación'][x]
     clase = []
@@ -111,6 +199,7 @@ def revision(line):
                 else:
                     clase.append(row.columns[index[0][0]].split(' ')[1])
             else:
+                # No existe la instruccion
                 return [instruccion, 'ERROR', 4]
     else:
         # La primer palabra debe ser la instruccion
@@ -124,14 +213,12 @@ def revision(line):
             return [instruccion, 'ERROR', 9]
     # En caso de tener mas de un tipo de directiva se revisa a cual
     # le corresponde
-    if len(clase) > 1:
+    if len(clase) >= 1:
         clase = corresponde(instruccion, line, clase)
         if clase[1] != 'ERROR':
             clase[0] = to_opcode(clase[0], clase[1])
     elif len(clase) == 0:
         clase = [line.upper(), 'Etiqueta']
-    elif len(clase) == 1:
-        clase = [to_opcode(instruccion, clase[0]), clase[0]]
 
     return clase
 
@@ -217,6 +304,8 @@ def s19():
 
 # Intenta abrir el archivo con codigo
 with open('code.asm') as file:
+    # Sustituir valores de constantes y variables
+    file = susValue(file)
     # Bandera para saber si existen errores
     errores = False
     # Bandera para saber si hay final
@@ -226,14 +315,16 @@ with open('code.asm') as file:
     # Recorremos todas las lineas de codigo
     for cont, i in enumerate(file):
         # Salimos del recorrido si se encuentra el termino del codigo
-        if 'END' in i:
+        if 'END' in i and search(r'^\*.*END', i) == None:
             end = True
             info.append('')
             break
         # Salta ORG
-        elif 'ORG' in i:
+        if 'ORG' in i and search(r'^\*.*ORG', i) == None:
             busq = search(r'\$[0-9]{1,4}', i)
             inicio = i[busq.start()+1:busq.end()]
+            info.append('')
+        elif not i:
             info.append('')
         # Salta comentario de linea
         elif search(r'^\*.', i) != None:
@@ -244,25 +335,36 @@ with open('code.asm') as file:
         # Encontramos los datos relevantes de las
         # instrucciones
         else:
-            temp = revision(i)
+            temp = revision(i.lower())
             temp.insert(0, cont)
             if len(temp) > 2 and temp[2] == 'ERROR':
                 errores = True
             info.append(temp)
     # Encontramos error por falta de END
     if end == False:
+        errores = True
         info.append(['ERROR', 10])
 # Se verifica si hay errores
 if errores:
+    contError = 0
+    # Aviso de error
+    print('ERROR')
     # Se crea un archivo especial para marcar los errores
-        with open('code.lst', 'w') as correct:
-        # Se vuelve a recorrer el archivo inicial
-            with open('code.asm') as file:
-                for cont, i in enumerate(file):
+    with open('code.lst', 'w') as correct:
+    # Se vuelve a recorrer el archivo inicial
+        with open('code.asm') as file:
+            file = array([x[1] for x in enumerate(file)])
+            for cont, i in enumerate(file):
                 # Se escribe el mismo codigo
-                    correct.write(f'{i}')
-                    # Se escribe el mismo codigo
-                    if 'ERROR' in info[cont]:
-                        correct.write(f'{error[str(info[cont][3])]}\n')
+                correct.write(f'{i}')
+                # Se escribe el error si existe
+                if 'ERROR' in info[cont]:
+                    correct.write(f'{error[str(info[cont][3])]}\n')
+                    contError += 1
+            if len(info) > len(file):
+                correct.write(f'\n{error[str(info[len(info)-1][1])]}')
+                contError += 1
+    print(f'Se encontro {contError} error' if contError == 1 else f'Se encontro {contError} errores')
 else:
+    print('SUCCES')
     s19()
