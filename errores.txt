@@ -13,10 +13,11 @@ DDRA   EQU   $1001
     LDY $AB
     LDAA $45,X
 
-CICLO
+1234
     LDY $AB
 
-    BEQ CICLO
+    BEQ 123
+ETIQUETA INEXISTENTE
 
     LDAA  $457C   *Buenas
 
