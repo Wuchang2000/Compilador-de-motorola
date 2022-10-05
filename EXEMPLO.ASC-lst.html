@@ -1,0 +1,505 @@
+<html><style type='text/css'>
+html {
+    font-family: Arial;
+    font-size: 16px;
+}
+r {
+    color: #ff0000;
+}
+b {
+    color: #0000ff;
+}
+</style><p><pre>0: Vacio            :**********************************</pre></p>
+<p><pre>1: Vacio            :*PROGRAMA DE EJEMPLO</pre></p>
+<p><pre>2: Vacio            :**********************************</pre></p>
+<p><pre>3: Vacio            :PACTL  EQU   $1026</pre></p>
+<p><pre>4: Vacio            :PACNT  EQU   $1027</pre></p>
+<p><pre>5: Vacio            :ADCTL  EQU   $1030</pre></p>
+<p><pre>6: Vacio            :ADR1   EQU   $1031</pre></p>
+<p><pre>7: Vacio            :ADR2   EQU   $1032</pre></p>
+<p><pre>8: Vacio            :ADR3   EQU   $1033</pre></p>
+<p><pre>9: Vacio            :ADR4   EQU   $1034</pre></p>
+<p><pre>10: Vacio           :OPTION EQU   $1039</pre></p>
+<p><pre>11: Vacio           :</pre></p>
+<p><pre>12: Vacio           :PORTA  EQU   $1000</pre></p>
+<p><pre>13: Vacio           :PORTD  EQU   $1008</pre></p>
+<p><pre>14: Vacio           :PORTE  EQU   $100A</pre></p>
+<p><pre>15: Vacio           :PORTG  EQU   $1002</pre></p>
+<p><pre>16: Vacio           :</pre></p>
+<p><pre>17: Vacio           :DDRA   EQU   $1001</pre></p>
+<p><pre>18: Vacio           :DDRD   EQU   $1009</pre></p>
+<p><pre>19: Vacio           :DDRG   EQU   $1003</pre></p>
+<p><pre>20: Vacio           :</pre></p>
+<p><pre>21: Vacio           :TMSK2  EQU   $1024</pre></p>
+<p><pre>22: Vacio           :TFLG2  EQU   $1025</pre></p>
+<p><pre>23: Vacio           :</pre></p>
+<p><pre>24: Vacio           :SCDR   EQU   $102F</pre></p>
+<p><pre>25: Vacio           :SCCR2  EQU   $102D</pre></p>
+<p><pre>26: Vacio           :SCSR   EQU   $102E</pre></p>
+<p><pre>27: Vacio           :SCCR1  EQU   $102C</pre></p>
+<p><pre>28: Vacio           :BAUD   EQU   $102B</pre></p>
+<p><pre>29: Vacio           :HPRIO  EQU   $103C</pre></p>
+<p><pre>30: Vacio           :SPCR   EQU   $1028</pre></p>
+<p><pre>31: Vacio           :CSCTL  EQU   $105D</pre></p>
+<p><pre>32: Vacio           :OPT2   EQU   $1038</pre></p>
+<p><pre>33: Vacio           :</pre></p>
+<p><pre>34: Vacio           :* VARIABLES *********************</pre></p>
+<p><pre>35: Vacio           :</pre></p>
+<p><pre>36: Vacio           :ORDEN  EQU   $000C</pre></p>
+<p><pre>37: Vacio           :SEG    EQU   $000D</pre></p>
+<p><pre>38: Vacio           :U1     EQU   $000E</pre></p>
+<p><pre>39: Vacio           :U2     EQU   $000F</pre></p>
+<p><pre>40: Vacio           :U3     EQU   $0010</pre></p>
+<p><pre>41: Vacio           :U4     EQU   $0011</pre></p>
+<p><pre>42: Vacio           :U5     EQU   $0012</pre></p>
+<p><pre>43: Vacio           :V1     EQU   $0013</pre></p>
+<p><pre>44: Vacio           :V2     EQU   $0014</pre></p>
+<p><pre>45: Vacio           :BAS_H  EQU   $0015</pre></p>
+<p><pre>46: Vacio           :BAS_L  EQU   $0016</pre></p>
+<p><pre>47: Vacio           :V5     EQU   $0017</pre></p>
+<p><pre>48: Vacio           :TEMPO  EQU   $0018</pre></p>
+<p><pre>49: Vacio           :ALTO   EQU   $0019</pre></p>
+<p><pre>50: Vacio           :BAJO   EQU   $001A</pre></p>
+<p><pre>51: Vacio           :BASE_H EQU   $001B</pre></p>
+<p><pre>52: Vacio           :BASE_L EQU   $001C</pre></p>
+<p><pre>53: Vacio           :V3     EQU   $001D</pre></p>
+<p><pre>54: Vacio           :V4     EQU   $001E</pre></p>
+<p><pre>55: Vacio           :</pre></p>
+<p><pre>56: Vacio           :**********************************</pre></p>
+<p><pre>57: Vacio           :*CONFIGURA REGISTROS</pre></p>
+<p><pre>58: Vacio           :**********************************</pre></p>
+<p><pre>59: Vacio           :       ORG   $8000   * DIR DE INICIO</pre></p>
+<p><pre>60: 8000 <r>8E</r><b>03FF</b>     :       LDS   #$03FF  * APUNTADOR DE STAK</pre></p>
+<p><pre>61: Vacio           :</pre></p>
+<p><pre>62: Vacio           :               </pre></p>
+<p><pre>63: 8003 <r>86</r><b>00</b>       :       LDAA  #$00    * CONFIG TODO EL PUERTO  A COMO ENTRADAS</pre></p>
+<p><pre>64: 8005 <r>B7</r><b>1001</b>     :       STAA  DDRA    * EL PUERTO A</pre></p>
+<p><pre>65: Vacio           :       </pre></p>
+<p><pre>66: 8008 <r>86</r><b>FF</b>       :       LDAA  #$FF    * CONFIG TODO EL PUERTO  G COMO SALIDAS</pre></p>
+<p><pre>67: 800A <r>B7</r><b>1003</b>     :       STAA  DDRG    * EL PUERTO G </pre></p>
+<p><pre>68: Vacio           :</pre></p>
+<p><pre>69: 800D <r>86</r><b>00</b>       :       LDAA  #$00    * SE PONE PUERTO G EN CEROS</pre></p>
+<p><pre>70: 800F <r>B7</r><b>1002</b>     :       STAA  PORTG</pre></p>
+<p><pre>71: Vacio           :       </pre></p>
+<p><pre>72: 8012 <r>CC</r><b>302C</b>     :       LDD   #$302C  * CONFIGURA PUERTO SERIAL</pre></p>
+<p><pre>73: 8015 <r>B7</r><b>102B</b>     :       STAA  BAUD    * BAUD  9600  para cristal de 8MHz</pre></p>
+<p><pre>74: 8018 <r>F7</r><b>102D</b>     :       STAB  SCCR2   * HABILITA  RX Y TX PERO INTERRUPCN SOLO RX</pre></p>
+<p><pre>75: 801B <r>86</r><b>00</b>       :       LDAA  #$00</pre></p>
+<p><pre>76: 801D <r>B7</r><b>102C</b>     :       STAA  SCCR1   * 8 BITS</pre></p>
+<p><pre>77: Vacio           :</pre></p>
+<p><pre>78: 8020 <r>86</r><b>FE</b>       :       LDAA  #$FE    * CONFIG PUERTO D COMO SALIDAS (EXCEPTO PD0)</pre></p>
+<p><pre>79: 8022 <r>B7</r><b>1009</b>     :       STAA  DDRD    * SEA  ENABLE DEL DISPLAY  PD4  Y RS PD3</pre></p>
+<p><pre>80: Vacio           :                     </pre></p>
+<p><pre>81: Vacio           :      </pre></p>
+<p><pre>82: 8025 <r>86</r><b>04</b>       :       LDAA  #$04</pre></p>
+<p><pre>83: 8027 <r>B7</r><b>103C</b>     :       STAA  HPRIO</pre></p>
+<p><pre>84: Vacio           :</pre></p>
+<p><pre>85: 802A <r>86</r><b>00</b>       :       LDAA  #$00</pre></p>
+<p><pre>86: 802C <r>06</r><b></b>         :       TAP</pre></p>
+<p><pre>87: Vacio           :</pre></p>
+<p><pre>88: Vacio           :</pre></p>
+<p><pre>89: Vacio           :</pre></p>
+<p><pre>90: Vacio           :       </pre></p>
+<p><pre>91: Vacio           :</pre></p>
+<p><pre>92: Vacio           :</pre></p>
+<p><pre>93: Vacio           :</pre></p>
+<p><pre>94: Vacio           :**********************************</pre></p>
+<p><pre>95: Vacio           :*PROGRAMA PRINCIPAL</pre></p>
+<p><pre>96: Vacio           :**********************************</pre></p>
+<p><pre>97: Vacio           :MAIN   </pre></p>
+<p><pre>98: 802D <r>BD</r><b>80A8</b>     :       JSR   INICIA</pre></p>
+<p><pre>99: 8030 <r>86</r><b>3F</b>       :       LDAA  #$3F</pre></p>
+<p><pre>100: 8032 <r>97</r><b>000C</b>    :       STAA  ORDEN         * CARGO UN (?) en 000A</pre></p>
+<p><pre>101: Vacio          :</pre></p>
+<p><pre>102: Vacio          :       </pre></p>
+<p><pre>103: Vacio          :CICLO</pre></p>
+<p><pre>104: 8035 <r>96</r><b>000D</b>    :       LDAA  SEG</pre></p>
+<p><pre>105: 8038 <r>27</r><b>FB</b>      :       BEQ   CICLO </pre></p>
+<p><pre>106: 803A <r>7F</r><b>000D</b>    :       CLR   SEG</pre></p>
+<p><pre>107: Vacio          :       </pre></p>
+<p><pre>108: 803D <r>B6</r><b>1027</b>    :       LDAA  PACNT</pre></p>
+<p><pre>109: 8040 <r>97</r><b>0017</b>    :       STAA  V5</pre></p>
+<p><pre>110: 8043 <r>7F</r><b>1027</b>    :       CLR   PACNT</pre></p>
+<p><pre>111: Vacio          :</pre></p>
+<p><pre>112: Vacio          :       </pre></p>
+<p><pre>113: 8046 <r>BD</r><b>81D1</b>    :       JSR   DATARX        * DESPLIEGA DATO TRANSMITIDO</pre></p>
+<p><pre>114: 8049 <r>1809</r><b></b>      :       DEY</pre></p>
+<p><pre>115: 804B <r>188F</r><b></b>      :       XGDY </pre></p>
+<p><pre>116: 804D <r>97</r><b>0019</b>    :       STAA  ALTO</pre></p>
+<p><pre>117: 8050 <r>D7</r><b>001A</b>    :       STAB  BAJO</pre></p>
+<p><pre>118: 8053 <r>188F</r><b></b>      :       XGDY</pre></p>
+<p><pre>119: 8055 <r>96</r><b>0019</b>    :       LDAA  ALTO</pre></p>
+<p><pre>120: 8058 <r>D6</r><b>001A</b>    :       LDAB  BAJO</pre></p>
+<p><pre>121: 805B <r>BD</r><b>822E</b>    :       JSR   BINBCD</pre></p>
+<p><pre>122: 805E <r>BD</r><b>8162</b>    :       JSR   DISPLAY</pre></p>
+<p><pre>123: 8061 <r>BD</r><b>8153</b>    :       JSR   POL</pre></p>
+<p><pre>124: 8064 <r>BD</r><b>81E2</b>    :       JSR   VOLTA</pre></p>
+<p><pre>125: Vacio          :       </pre></p>
+<p><pre>126: 8067 <r>4F</r><b></b>        :       CLRA</pre></p>
+<p><pre>127: 8068 <r>D6</r><b>0013</b>    :       LDAB  V1</pre></p>
+<p><pre>128: 806B <r>BD</r><b>823A</b>    :       JSR   BNBCD</pre></p>
+<p><pre>129: 806E <r>BD</r><b>8181</b>    :       JSR   DSPLY</pre></p>
+<p><pre>130: 8071 <r>BD</r><b>8153</b>    :       JSR   POL</pre></p>
+<p><pre>131: Vacio          :</pre></p>
+<p><pre>132: 8074 <r>4F</r><b></b>        :       CLRA</pre></p>
+<p><pre>133: 8075 <r>D6</r><b>0014</b>    :       LDAB  V2</pre></p>
+<p><pre>134: 8078 <r>BD</r><b>823A</b>    :       JSR   BNBCD</pre></p>
+<p><pre>135: 807B <r>BD</r><b>8181</b>    :       JSR   DSPLY</pre></p>
+<p><pre>136: 807E <r>BD</r><b>8153</b>    :       JSR   POL</pre></p>
+<p><pre>137: Vacio          :</pre></p>
+<p><pre>138: 8081 <r>4F</r><b></b>        :       CLRA</pre></p>
+<p><pre>139: 8082 <r>D6</r><b>001D</b>    :       LDAB  V3</pre></p>
+<p><pre>140: 8085 <r>BD</r><b>823A</b>    :       JSR   BNBCD</pre></p>
+<p><pre>141: 8088 <r>BD</r><b>8181</b>    :       JSR   DSPLY</pre></p>
+<p><pre>142: 808B <r>BD</r><b>8153</b>    :       JSR   POL</pre></p>
+<p><pre>143: Vacio          :</pre></p>
+<p><pre>144: 808E <r>4F</r><b></b>        :       CLRA</pre></p>
+<p><pre>145: 808F <r>D6</r><b>001E</b>    :       LDAB  V4</pre></p>
+<p><pre>146: 8092 <r>BD</r><b>823A</b>    :       JSR   BNBCD</pre></p>
+<p><pre>147: 8095 <r>BD</r><b>8181</b>    :       JSR   DSPLY</pre></p>
+<p><pre>148: 8098 <r>BD</r><b>8153</b>    :       JSR   POL</pre></p>
+<p><pre>149: Vacio          : </pre></p>
+<p><pre>150: 809B <r>4F</r><b></b>        :       CLRA</pre></p>
+<p><pre>151: 809C <r>D6</r><b>0017</b>    :       LDAB  V5</pre></p>
+<p><pre>152: 809F <r>BD</r><b>823A</b>    :       JSR   BNBCD</pre></p>
+<p><pre>153: 80A2 <r>BD</r><b>8181</b>    :       JSR   DSPLY</pre></p>
+<p><pre>154: Vacio          :       </pre></p>
+<p><pre>155: 80A5 <r>BD</r><b>81AF</b>    :       JSR   CRYTRN</pre></p>
+<p><pre>156: Vacio          :    </pre></p>
+<p><pre>157: 80A8 <r>7E</r><b>8035</b>    :       JMP   CICLO</pre></p>
+<p><pre>158: Vacio          :</pre></p>
+<p><pre>159: Vacio          :</pre></p>
+<p><pre>160: Vacio          :***********************************</pre></p>
+<p><pre>161: Vacio          :* INICIA</pre></p>
+<p><pre>162: Vacio          :***********************************</pre></p>
+<p><pre>163: Vacio          :INICIA</pre></p>
+<p><pre>164: Vacio          :     </pre></p>
+<p><pre>165: 80AB <r>7F</r><b>000D</b>    :      CLR  SEG</pre></p>
+<p><pre>166: Vacio          :</pre></p>
+<p><pre>167: 80AE <r>7F</r><b>1002</b>    :      CLR  PORTG</pre></p>
+<p><pre>168: 80B1 <r>86</r><b>F4</b>      :      LDAA #$F4         </pre></p>
+<p><pre>169: 80B3 <r>97</r><b>0018</b>    :      STAA TEMPO         * TEMPO ES VARIABLE PARA CONTAR 244 CICLOS</pre></p>
+<p><pre>170: Vacio          :</pre></p>
+<p><pre>171: 80B6 <r>CE</r><b>1024</b>    :      LDX #TMSK2</pre></p>
+<p><pre>172: 80B9 <r>1C</r><b>0040</b>    :      BSET $00,X,#$40    * HABILITA INTERRUPCION TIMER T-REAL</pre></p>
+<p><pre>173: 80BC <r>0E</r><b></b>        :      CLI</pre></p>
+<p><pre>174: Vacio          :</pre></p>
+<p><pre>175: 80BD <r>CE</r><b>1026</b>    :      LDX #PACTL</pre></p>
+<p><pre>176: 80C0 <r>1C</r><b>0050</b>    :      BSET $00,X,#$50    * HABILITA PAEN -ACUMULADOR PULSOS ALTOS-</pre></p>
+<p><pre>177: 80C3 <r>7F</r><b>1027</b>    :      CLR PACNT          * BORRA ACUMULADOR DE PULSOS</pre></p>
+<p><pre>178: Vacio          :</pre></p>
+<p><pre>179: 80C6 <r>86</r><b>10</b>      :      LDAA #$10</pre></p>
+<p><pre>180: 80C8 <r>97</r><b>001B</b>    :      STAA BASE_H        * PONE UN #1060 COMO DIRECCION BASE INICIAL</pre></p>
+<p><pre>181: 80CB <r>86</r><b>60</b>      :      LDAA #$60</pre></p>
+<p><pre>182: 80CD <r>97</r><b>001C</b>    :      STAA BASE_L    </pre></p>
+<p><pre>183: Vacio          :      </pre></p>
+<p><pre>184: 80D0 <r>18CE</r><b>1060</b>  :      LDY  #$1060      </pre></p>
+<p><pre>185: Vacio          :      </pre></p>
+<p><pre>186: 80D4 <r>86</r><b>16</b>      :      LDAA #$16</pre></p>
+<p><pre>187: 80D6 <r>97</r><b>0015</b>    :      STAA BAS_H        * PONE UN #1653 NUMERO TOTAL DE JUEGO DE MUESTRAS</pre></p>
+<p><pre>188: 80D9 <r>86</r><b>53</b>      :      LDAA #$53</pre></p>
+<p><pre>189: 80DB <r>97</r><b>0016</b>    :      STAA BAS_L   </pre></p>
+<p><pre>190: Vacio          :</pre></p>
+<p><pre>191: Vacio          :</pre></p>
+<p><pre>192: 80DE <r>7F</r><b>0019</b>    :      CLR  ALTO          * INICIA INDICE MUESTRA EN 0</pre></p>
+<p><pre>193: 80E1 <r>7F</r><b>001A</b>    :      CLR  BAJO</pre></p>
+<p><pre>194: Vacio          :</pre></p>
+<p><pre>195: 80E4 <r>39</r><b></b>        :       RTS</pre></p>
+<p><pre>196: Vacio          :***********************************</pre></p>
+<p><pre>197: Vacio          :* SACA</pre></p>
+<p><pre>198: Vacio          :***********************************</pre></p>
+<p><pre>199: Vacio          :SACA</pre></p>
+<p><pre>200: Vacio          :            </pre></p>
+<p><pre>201: Vacio          :       </pre></p>
+<p><pre>202: 80E5 <r>96</r><b>0019</b>    :       LDAA  ALTO         * INDICE DE MUESTRA (SEGUNDO)</pre></p>
+<p><pre>203: 80E8 <r>D6</r><b>001A</b>    :       LDAB  BAJO</pre></p>
+<p><pre>204: 80EB <r>188F</r><b></b>      :       XGDY</pre></p>
+<p><pre>205: 80ED <r>1808</r><b></b>      :       INY</pre></p>
+<p><pre>206: 80EF <r>188F</r><b></b>      :       XGDY</pre></p>
+<p><pre>207: 80F1 <r>BD</r><b>8228</b>    :       JSR   BINBCD</pre></p>
+<p><pre>208: 80F4 <r>BD</r><b>8162</b>    :       JSR   DISPLAY</pre></p>
+<p><pre>209: 80F7 <r>BD</r><b>8153</b>    :       JSR   POL</pre></p>
+<p><pre>210: Vacio          : </pre></p>
+<p><pre>211: 80FA <r>96</r><b>001B</b>    :       LDAA  BASE_H       * INDICE DE MUESTRA (PARTICULAR)</pre></p>
+<p><pre>212: 80FD <r>D6</r><b>001C</b>    :       LDAB  BASE_L</pre></p>
+<p><pre>213: 8100 <r>188F</r><b></b>      :       XGDY</pre></p>
+<p><pre>214: Vacio          :       </pre></p>
+<p><pre>215: 8102 <r>1808</r><b></b>      :       INY</pre></p>
+<p><pre>216: 8104 <r>4F</r><b></b>        :       CLRA</pre></p>
+<p><pre>217: 8105 <r>18E6</r><b>00</b>    :       LDAB  $00,Y  </pre></p>
+<p><pre>218: 8108 <r>BD</r><b>823A</b>    :       JSR   BNBCD</pre></p>
+<p><pre>219: 810B <r>BD</r><b>8181</b>    :       JSR   DSPLY</pre></p>
+<p><pre>220: 810E <r>BD</r><b>8153</b>    :       JSR   POL</pre></p>
+<p><pre>221: Vacio          :</pre></p>
+<p><pre>222: 8111 <r>1808</r><b></b>      :       INY</pre></p>
+<p><pre>223: 8113 <r>4F</r><b></b>        :       CLRA</pre></p>
+<p><pre>224: 8114 <r>18E6</r><b>00</b>    :       LDAB  $00,Y</pre></p>
+<p><pre>225: 8117 <r>BD</r><b>823A</b>    :       JSR   BNBCD</pre></p>
+<p><pre>226: 811A <r>BD</r><b>8181</b>    :       JSR   DSPLY</pre></p>
+<p><pre>227: 811D <r>BD</r><b>8153</b>    :       JSR   POL</pre></p>
+<p><pre>228: Vacio          :</pre></p>
+<p><pre>229: 8120 <r>1808</r><b></b>      :       INY</pre></p>
+<p><pre>230: 8122 <r>4F</r><b></b>        :       CLRA</pre></p>
+<p><pre>231: 8123 <r>18E6</r><b>00</b>    :       LDAB  $00,Y</pre></p>
+<p><pre>232: 8126 <r>BD</r><b>823A</b>    :       JSR   BNBCD</pre></p>
+<p><pre>233: 8129 <r>BD</r><b>8181</b>    :       JSR   DSPLY</pre></p>
+<p><pre>234: 812C <r>BD</r><b>8153</b>    :       JSR   POL</pre></p>
+<p><pre>235: Vacio          :</pre></p>
+<p><pre>236: 812F <r>1808</r><b></b>      :       INY</pre></p>
+<p><pre>237: 8131 <r>4F</r><b></b>        :       CLRA</pre></p>
+<p><pre>238: 8132 <r>18E6</r><b>00</b>    :       LDAB  $00,Y</pre></p>
+<p><pre>239: 8135 <r>BD</r><b>823A</b>    :       JSR   BNBCD</pre></p>
+<p><pre>240: 8138 <r>BD</r><b>8181</b>    :       JSR   DSPLY</pre></p>
+<p><pre>241: 813B <r>BD</r><b>8153</b>    :       JSR   POL</pre></p>
+<p><pre>242: Vacio          : </pre></p>
+<p><pre>243: 813E <r>1808</r><b></b>      :       INY</pre></p>
+<p><pre>244: 8140 <r>4F</r><b></b>        :       CLRA </pre></p>
+<p><pre>245: 8141 <r>18E6</r><b>00</b>    :       LDAB  $00,Y</pre></p>
+<p><pre>246: 8144 <r>BD</r><b>823A</b>    :       JSR   BNBCD</pre></p>
+<p><pre>247: 8147 <r>BD</r><b>8181</b>    :       JSR   DSPLY</pre></p>
+<p><pre>248: Vacio          :       </pre></p>
+<p><pre>249: 814A <r>188F</r><b></b>      :       XGDY</pre></p>
+<p><pre>250: 814C <r>97</r><b>001B</b>    :       STAA BASE_H</pre></p>
+<p><pre>251: 814F <r>D7</r><b>001C</b>    :       STAB BASE_L</pre></p>
+<p><pre>252: Vacio          :</pre></p>
+<p><pre>253: 8152 <r>BD</r><b>81AF</b>    :       JSR   CRYTRN</pre></p>
+<p><pre>254: Vacio          :</pre></p>
+<p><pre>255: 8155 <r>39</r><b></b>        :       RTS</pre></p>
+<p><pre>256: Vacio          :***********************************</pre></p>
+<p><pre>257: Vacio          :* POL</pre></p>
+<p><pre>258: Vacio          :***********************************</pre></p>
+<p><pre>259: Vacio          :POL</pre></p>
+<p><pre>260: 8156 <r>CE</r><b>102E</b>    :       LDX   #SCSR </pre></p>
+<p><pre>261: Vacio          :       </pre></p>
+<p><pre>262: 8159 <r>B6</r><b>102E</b>    :       LDAA  SCSR</pre></p>
+<p><pre>263: 815C <r>86</r><b>2C</b>      :       LDAA  #$2C             * POL</pre></p>
+<p><pre>264: 815E <r>B7</r><b>102F</b>    :       STAA  SCDR</pre></p>
+<p><pre>265: Vacio          :C1</pre></p>
+<p><pre>266: 8161 <r>1F</r><b>0080</b>    :       BRCLR $00,X,#$80 C1 </pre></p>
+<p><pre>267: 8164 <r>39</r><b></b>        :       RTS</pre></p>
+<p><pre>268: Vacio          :***********************************</pre></p>
+<p><pre>269: Vacio          :* DESPLIEGA</pre></p>
+<p><pre>270: Vacio          :***********************************</pre></p>
+<p><pre>271: Vacio          :DISPLAY</pre></p>
+<p><pre>272: Vacio          :       </pre></p>
+<p><pre>273: 8165 <r>CE</r><b>102E</b>    :       LDX   #SCSR </pre></p>
+<p><pre>274: Vacio          :       </pre></p>
+<p><pre>275: 8168 <r>B6</r><b>102E</b>    :       LDAA  SCSR</pre></p>
+<p><pre>276: 816B <r>96</r><b>000E</b>    :       LDAA  U1             * U1</pre></p>
+<p><pre>277: 816E <r>8B</r><b>30</b>      :       ADDA  #$30</pre></p>
+<p><pre>278: 8170 <r>B7</r><b>102F</b>    :       STAA  SCDR</pre></p>
+<p><pre>279: Vacio          :T1</pre></p>
+<p><pre>280: 8173 <r>1F</r><b>0080</b>    :       BRCLR $00,X,#$80 T1 </pre></p>
+<p><pre>281: Vacio          :      </pre></p>
+<p><pre>282: 8176 <r>B6</r><b>102E</b>    :       LDAA  SCSR</pre></p>
+<p><pre>283: 8179 <r>96</r><b>000F</b>    :       LDAA  U2             * U2</pre></p>
+<p><pre>284: 817C <r>8B</r><b>30</b>      :       ADDA  #$30</pre></p>
+<p><pre>285: 817E <r>B7</r><b>102F</b>    :       STAA  SCDR</pre></p>
+<p><pre>286: Vacio          :T2</pre></p>
+<p><pre>287: 8181 <r>1F</r><b>0080</b>    :       BRCLR $00,X,#$80 T2 </pre></p>
+<p><pre>288: Vacio          :</pre></p>
+<p><pre>289: Vacio          :DSPLY  </pre></p>
+<p><pre>290: 8184 <r>CE</r><b>102E</b>    :       LDX   #SCSR</pre></p>
+<p><pre>291: Vacio          :    </pre></p>
+<p><pre>292: 8187 <r>B6</r><b>102E</b>    :       LDAA SCSR</pre></p>
+<p><pre>293: 818A <r>96</r><b>0010</b>    :       LDAA  U3             * U3</pre></p>
+<p><pre>294: 818D <r>8B</r><b>30</b>      :       ADDA  #$30</pre></p>
+<p><pre>295: 818F <r>B7</r><b>102F</b>    :       STAA  SCDR</pre></p>
+<p><pre>296: Vacio          :T3</pre></p>
+<p><pre>297: 8192 <r>1F</r><b>0080</b>    :       BRCLR $00,X,#$80 T3 </pre></p>
+<p><pre>298: Vacio          :      </pre></p>
+<p><pre>299: 8195 <r>B6</r><b>102E</b>    :       LDAA SCSR </pre></p>
+<p><pre>300: 8198 <r>96</r><b>0011</b>    :       LDAA  U4             * U4</pre></p>
+<p><pre>301: 819B <r>8B</r><b>30</b>      :       ADDA  #$30</pre></p>
+<p><pre>302: 819D <r>B7</r><b>102F</b>    :       STAA  SCDR</pre></p>
+<p><pre>303: Vacio          :T4</pre></p>
+<p><pre>304: 81A0 <r>1F</r><b>0080</b>    :       BRCLR $00,X,#$80 T4 </pre></p>
+<p><pre>305: Vacio          :   </pre></p>
+<p><pre>306: 81A3 <r>B6</r><b>102E</b>    :       LDAA SCSR</pre></p>
+<p><pre>307: 81A6 <r>96</r><b>0012</b>    :       LDAA  U5             * U5</pre></p>
+<p><pre>308: 81A9 <r>8B</r><b>30</b>      :       ADDA  #$30</pre></p>
+<p><pre>309: 81AB <r>B7</r><b>102F</b>    :       STAA  SCDR</pre></p>
+<p><pre>310: Vacio          :T5</pre></p>
+<p><pre>311: 81AE <r>1F</r><b>0080</b>    :       BRCLR $00,X,#$80 T5  </pre></p>
+<p><pre>312: Vacio          :       </pre></p>
+<p><pre>313: 81B1 <r>39</r><b></b>        :       RTS</pre></p>
+<p><pre>314: Vacio          :</pre></p>
+<p><pre>315: Vacio          :***********************************</pre></p>
+<p><pre>316: Vacio          :* CARRY RETURN</pre></p>
+<p><pre>317: Vacio          :***********************************</pre></p>
+<p><pre>318: Vacio          :</pre></p>
+<p><pre>319: Vacio          :CRYTRN</pre></p>
+<p><pre>320: 81B2 <r>CE</r><b>102E</b>    :       LDX   #SCSR </pre></p>
+<p><pre>321: 81B5 <r>B6</r><b>102E</b>    :       LDAA  SCSR</pre></p>
+<p><pre>322: 81B8 <r>86</r><b>0A</b>      :       LDAA  #$0A             * NEW LINE     </pre></p>
+<p><pre>323: 81BA <r>B7</r><b>102F</b>    :       STAA  SCDR</pre></p>
+<p><pre>324: Vacio          :CR1</pre></p>
+<p><pre>325: 81BD <r>1F</r><b>0080</b>    :       BRCLR $00,X,#$80 CR1        </pre></p>
+<p><pre>326: Vacio          :</pre></p>
+<p><pre>327: 81C0 <r>B6</r><b>102E</b>    :       LDAA SCSR</pre></p>
+<p><pre>328: 81C3 <r>86</r><b>0D</b>      :       LDAA #$0D              * CARRY RETURN     </pre></p>
+<p><pre>329: 81C5 <r>B7</r><b>102F</b>    :       STAA SCDR</pre></p>
+<p><pre>330: Vacio          :CR2</pre></p>
+<p><pre>331: 81C8 <r>1F</r><b>0080</b>    :       BRCLR $00,X,#$80 CR2        </pre></p>
+<p><pre>332: Vacio          :</pre></p>
+<p><pre>333: 81CB <r>39</r><b></b>        :       RTS</pre></p>
+<p><pre>334: Vacio          :***********************************</pre></p>
+<p><pre>335: Vacio          :*  DESPLIEGUE DE DATO RECIBIDO</pre></p>
+<p><pre>336: Vacio          :***********************************</pre></p>
+<p><pre>337: Vacio          :</pre></p>
+<p><pre>338: Vacio          :DATARX</pre></p>
+<p><pre>339: 81CC <r>CE</r><b>102E</b>    :       LDX   #SCSR </pre></p>
+<p><pre>340: 81CF <r>B6</r><b>102E</b>    :       LDAA  SCSR</pre></p>
+<p><pre>341: 81D2 <r>96</r><b>000C</b>    :       LDAA  ORDEN             * NEW LINE     </pre></p>
+<p><pre>342: 81D5 <r>B7</r><b>102F</b>    :       STAA  SCDR</pre></p>
+<p><pre>343: Vacio          :DT1</pre></p>
+<p><pre>344: 81D8 <r>1F</r><b>0080d</b>   :       BRCLR $00,X,#$80 DT1        </pre></p>
+<p><pre>345: Vacio          :</pre></p>
+<p><pre>346: 81DA <r>B6</r><b>102E</b>    :       LDAA SCSR </pre></p>
+<p><pre>347: 81DD <r>86</r><b>3A</b>      :       LDAA #$3A              * DOS PUNTOS    </pre></p>
+<p><pre>348: 81DF <r>B7</r><b>102F</b>    :       STAA SCDR</pre></p>
+<p><pre>349: Vacio          :DT2</pre></p>
+<p><pre>350: 81E2 <r>1F</r><b>0080d</b>   :       BRCLR $00,X,#$80 DT2        </pre></p>
+<p><pre>351: Vacio          :</pre></p>
+<p><pre>352: 81E4 <r>39</r><b></b>        :       RTS</pre></p>
+<p><pre>353: Vacio          :***********************************</pre></p>
+<p><pre>354: Vacio          :* voltimetro</pre></p>
+<p><pre>355: Vacio          :***********************************</pre></p>
+<p><pre>356: Vacio          :VOLTA</pre></p>
+<p><pre>357: 81E5 <r>CE</r><b>1030</b>    :      LDX #ADCTL      </pre></p>
+<p><pre>358: Vacio          :</pre></p>
+<p><pre>359: 81E8 <r>86</r><b>80</b>      :      LDAA #$80</pre></p>
+<p><pre>360: 81EA <r>B7</r><b>1039</b>    :      STAA OPTION        * PONE EN MARCHA EL ADC</pre></p>
+<p><pre>361: Vacio          :    </pre></p>
+<p><pre>362: 81ED <r>86</r><b>10</b>      :      LDAA #$10</pre></p>
+<p><pre>363: 81EF <r>B7</r><b>1030</b>    :      STAA ADCTL         * ENTRADA MULTIPLE SELECCIONA CANAL 0</pre></p>
+<p><pre>364: Vacio          :</pre></p>
+<p><pre>365: Vacio          :E1</pre></p>
+<p><pre>366: 81F2 <r>1F</r><b>0080</b>    :      BRCLR $00,X,#$80 E1  </pre></p>
+<p><pre>367: 81F5 <r>F6</r><b>1031</b>    :      LDAB ADR1</pre></p>
+<p><pre>368: 81F8 <r>D7</r><b>0013</b>    :      STAB V1</pre></p>
+<p><pre>369: Vacio          :      </pre></p>
+<p><pre>370: 81FB <r>86</r><b>80</b>      :      LDAA #$80</pre></p>
+<p><pre>371: 81FD <r>B7</r><b>1039</b>    :      STAA OPTION        * PONE EN MARCHA EL ADC</pre></p>
+<p><pre>372: Vacio          :    </pre></p>
+<p><pre>373: 8200 <r>86</r><b>11</b>      :      LDAA #$11</pre></p>
+<p><pre>374: 8202 <r>B7</r><b>1030</b>    :      STAA ADCTL         * ENTRADA MULTIPLE SELECCIONA CANAL 1</pre></p>
+<p><pre>375: Vacio          :</pre></p>
+<p><pre>376: Vacio          :E2</pre></p>
+<p><pre>377: 8205 <r>1F</r><b>0080</b>    :      BRCLR $00,X,#$80 E2  </pre></p>
+<p><pre>378: 8208 <r>F6</r><b>1032</b>    :      LDAB ADR2</pre></p>
+<p><pre>379: 820B <r>D7</r><b>0014</b>    :      STAB V2</pre></p>
+<p><pre>380: Vacio          :     </pre></p>
+<p><pre>381: 820E <r>86</r><b>12</b>      :      LDAA #$12</pre></p>
+<p><pre>382: 8210 <r>B7</r><b>1030</b>    :      STAA ADCTL         * ENTRADA MULTIPLE SELECCIONA CANAL 2</pre></p>
+<p><pre>383: Vacio          :</pre></p>
+<p><pre>384: Vacio          :E3</pre></p>
+<p><pre>385: 8213 <r>1F</r><b>0080</b>    :      BRCLR $00,X,#$80 E3  </pre></p>
+<p><pre>386: 8216 <r>F6</r><b>1033</b>    :      LDAB ADR3</pre></p>
+<p><pre>387: 8219 <r>D7</r><b>001D</b>    :      STAB V3 </pre></p>
+<p><pre>388: Vacio          :</pre></p>
+<p><pre>389: 821C <r>86</r><b>13</b>      :      LDAA #$13</pre></p>
+<p><pre>390: 821E <r>B7</r><b>1030</b>    :      STAA ADCTL         * ENTRADA MULTIPLE SELECCIONA CANAL 3</pre></p>
+<p><pre>391: Vacio          :</pre></p>
+<p><pre>392: Vacio          :E4</pre></p>
+<p><pre>393: 8221 <r>1F</r><b>0080</b>    :      BRCLR $00,X,#$80 E4  </pre></p>
+<p><pre>394: 8224 <r>F6</r><b>1034</b>    :      LDAB ADR4</pre></p>
+<p><pre>395: 8227 <r>D7</r><b>001E</b>    :      STAB V4</pre></p>
+<p><pre>396: Vacio          :</pre></p>
+<p><pre>397: Vacio          :           </pre></p>
+<p><pre>398: 822A <r>39</r><b></b>        :      RTS</pre></p>
+<p><pre>399: Vacio          :***********************************</pre></p>
+<p><pre>400: Vacio          :* CONVIERTE A BCD</pre></p>
+<p><pre>401: Vacio          :***********************************</pre></p>
+<p><pre>402: Vacio          :</pre></p>
+<p><pre>403: Vacio          :BINBCD</pre></p>
+<p><pre>404: Vacio          :     </pre></p>
+<p><pre>405: 822B <r>CE</r><b>2710</b>    :      LDX  #$2710</pre></p>
+<p><pre>406: 822E <r>02</r><b></b>        :      IDIV </pre></p>
+<p><pre>407: 822F <r>8F</r><b></b>        :      XGDX</pre></p>
+<p><pre>408: 8230 <r>D7</r><b>000E</b>    :      STAB U1</pre></p>
+<p><pre>409: 8233 <r>8F</r><b></b>        :      XGDX</pre></p>
+<p><pre>410: 8234 <r>CE</r><b>03E8</b>    :      LDX  #$3E8</pre></p>
+<p><pre>411: 8237 <r>02</r><b></b>        :      IDIV</pre></p>
+<p><pre>412: 8238 <r>8F</r><b></b>        :      XGDX</pre></p>
+<p><pre>413: 8239 <r>D7</r><b>000F</b>    :      STAB U2</pre></p>
+<p><pre>414: 823C <r>8F</r><b></b>        :      XGDX</pre></p>
+<p><pre>415: Vacio          :</pre></p>
+<p><pre>416: Vacio          :BNBCD</pre></p>
+<p><pre>417: 823D <r>CE</r><b>64</b>      :      LDX  #$64</pre></p>
+<p><pre>418: 823F <r>02</r><b></b>        :      IDIV</pre></p>
+<p><pre>419: 8240 <r>8F</r><b></b>        :      XGDX</pre></p>
+<p><pre>420: 8241 <r>D7</r><b>0010</b>    :      STAB U3</pre></p>
+<p><pre>421: 8244 <r>8F</r><b></b>        :      XGDX</pre></p>
+<p><pre>422: 8245 <r>CE</r><b>0A</b>      :      LDX  #$A</pre></p>
+<p><pre>423: 8247 <r>02</r><b></b>        :      IDIV</pre></p>
+<p><pre>424: 8248 <r>8F</r><b></b>        :      XGDX</pre></p>
+<p><pre>425: 8249 <r>D7</r><b>0011</b>    :      STAB U4</pre></p>
+<p><pre>426: 824C <r>8F</r><b></b>        :      XGDX</pre></p>
+<p><pre>427: 824D <r>D7</r><b>0012</b>    :      STAB U5</pre></p>
+<p><pre>428: Vacio          :</pre></p>
+<p><pre>429: Vacio          :</pre></p>
+<p><pre>430: Vacio          :</pre></p>
+<p><pre>431: 8250 <r>39</r><b></b>        :      RTS</pre></p>
+<p><pre>432: Vacio          :</pre></p>
+<p><pre>433: Vacio          :</pre></p>
+<p><pre>434: Vacio          :</pre></p>
+<p><pre>435: Vacio          :***********************************</pre></p>
+<p><pre>436: Vacio          :* ATENCION A INTERRUPCION SERIAL</pre></p>
+<p><pre>437: Vacio          :***********************************</pre></p>
+<p><pre>438: Vacio          :       ORG  $F100</pre></p>
+<p><pre>439: Vacio          :  </pre></p>
+<p><pre>440: Vacio          :     </pre></p>
+<p><pre>441: Vacio          : </pre></p>
+<p><pre>442: F100 <r>B6</r><b>102E</b>    :       LDAA SCSR</pre></p>
+<p><pre>443: F103 <r>B6</r><b>102F</b>    :       LDAA SCDR</pre></p>
+<p><pre>444: F106 <r>97</r><b>000C</b>    :       STAA ORDEN</pre></p>
+<p><pre>445: Vacio          :</pre></p>
+<p><pre>446: Vacio          :       </pre></p>
+<p><pre>447: Vacio          :</pre></p>
+<p><pre>448: F109 <r>3B</r><b></b>        :       RTI</pre></p>
+<p><pre>449: Vacio          :</pre></p>
+<p><pre>450: Vacio          :***********************************</pre></p>
+<p><pre>451: Vacio          :* ATENCION A INTERRUPCION REAL TIME</pre></p>
+<p><pre>452: Vacio          :***********************************</pre></p>
+<p><pre>453: Vacio          :      ORG  $F110</pre></p>
+<p><pre>454: Vacio          :</pre></p>
+<p><pre>455: Vacio          :      </pre></p>
+<p><pre>456: Vacio          :</pre></p>
+<p><pre>457: F110 <r>CE</r><b>1025</b>    :      LDX #TFLG2</pre></p>
+<p><pre>458: F113 <r>1C</r><b>0040</b>    :      BSET $00,X,#$40    * BORRA BANDERA INTERRUPCION</pre></p>
+<p><pre>459: F116 <r>7A</r><b>0018</b>    :      DEC TEMPO</pre></p>
+<p><pre>460: F119 <r>27</r><b>01</b>      :      BEQ SEGUNDO</pre></p>
+<p><pre>461: Vacio          :      </pre></p>
+<p><pre>462: Vacio          :     </pre></p>
+<p><pre>463: F11B <r>3B</r><b></b>        :      RTI</pre></p>
+<p><pre>464: Vacio          :</pre></p>
+<p><pre>465: Vacio          :SEGUNDO</pre></p>
+<p><pre>466: F11C <r>86</r><b>FF</b>      :      LDAA #$FF</pre></p>
+<p><pre>467: F11E <r>97</r><b>000D</b>    :      STAA SEG           * SEG ES UNA BANDERA DE SEGUNDO    </pre></p>
+<p><pre>468: F121 <r>86</r><b>F4</b>      :      LDAA #$F4         </pre></p>
+<p><pre>469: F123 <r>97</r><b>0018</b>    :      STAA TEMPO         * TEMPO ES VARIABLE PARA CONTAR 244 CICLOS</pre></p>
+<p><pre>470: F126 <r>7C</r><b>1002</b>    :      INC  PORTG</pre></p>
+<p><pre>471: Vacio          :     </pre></p>
+<p><pre>472: Vacio          :      </pre></p>
+<p><pre>473: F129 <r>3B</r><b></b>        :      RTI</pre></p>
+<p><pre>474: Vacio          :***********************************</pre></p>
+<p><pre>475: Vacio          :* VECTOR INTERRUPCION SERIAL</pre></p>
+<p><pre>476: Vacio          :***********************************</pre></p>
+<p><pre>477: Vacio          :       ORG   $FFD6</pre></p>
+<p><pre>478: FFD6 <r></r><b>F100</b>      :       FCB   $F1,$00       </pre></p>
+<p><pre>479: Vacio          :</pre></p>
+<p><pre>480: Vacio          :***********************************</pre></p>
+<p><pre>481: Vacio          :* VECTOR INTERRUPCION REAL TIME</pre></p>
+<p><pre>482: Vacio          :***********************************</pre></p>
+<p><pre>483: Vacio          :       ORG   $FFF0</pre></p>
+<p><pre>484: FFF0 <r></r><b>F110</b>      :       FCB   $F1,$10       </pre></p>
+<p><pre>485: Vacio          :</pre></p>
+<p><pre>486: Vacio          :***********************************</pre></p>
+<p><pre>487: Vacio          :*RESET</pre></p>
+<p><pre>488: Vacio          :***********************************</pre></p>
+<p><pre>489: Vacio          :       ORG    $FFFE</pre></p>
+<p><pre>490: Vacio          :RESET  </pre></p>
+<p><pre>491: FFFE <r></r><b>8000</b>      :       FCB    $80,$00</pre></p>
+<p><pre>492: Vacio          :***********************************</pre></p>
+<p><pre>493: Vacio          :       END   $8000</pre></p>
