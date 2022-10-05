@@ -1,0 +1,70 @@
+<html><style type='text/css'>
+html {
+    font-family: Arial;
+    font-size: 16px;
+}
+r {
+    color: #ff0000;
+}
+b {
+    color: #0000ff;
+}
+</style><p><pre>0: Vacio            :CONSTANTE EQU $1789</pre></p>
+<p><pre>1: Vacio            :</pre></p>
+<p><pre>2: Vacio            :VAR EQU $0000</pre></p>
+<p><pre>3: Vacio            :</pre></p>
+<p><pre>4: Vacio            :VAR1 EQU $0002</pre></p>
+<p><pre>5: Vacio            :</pre></p>
+<p><pre>6: Vacio            :VAR2 EQU $0003</pre></p>
+<p><pre>7: Vacio            :</pre></p>
+<p><pre>8: Vacio            :    ORG $8000</pre></p>
+<p><pre>9: Vacio            :</pre></p>
+<p><pre>10: Vacio           :INICIO</pre></p>
+<p><pre>11: Vacio           :</pre></p>
+<p><pre>12: 8000 <r>CE</r><b>1789</b>     :    LDX #CONSTANTE</pre></p>
+<p><pre>13: Vacio           :</pre></p>
+<p><pre>14: Vacio           :SALTO</pre></p>
+<p><pre>15: Vacio           :</pre></p>
+<p><pre>16: 8003 <r>01</r><b></b>         :    NOP</pre></p>
+<p><pre>17: Vacio           :</pre></p>
+<p><pre>18: 8004 <r>01</r><b></b>         :    NOP</pre></p>
+<p><pre>19: Vacio           :</pre></p>
+<p><pre>20: Vacio           :SALTO1</pre></p>
+<p><pre>21: Vacio           :</pre></p>
+<p><pre>22: 8005 <r>01</r><b></b>         :    NOP</pre></p>
+<p><pre>23: Vacio           :</pre></p>
+<p><pre>24: 8006 <r>01</r><b></b>         :    NOP</pre></p>
+<p><pre>25: Vacio           :</pre></p>
+<p><pre>26: Vacio           :SALTO2</pre></p>
+<p><pre>27: Vacio           :</pre></p>
+<p><pre>28: 8007 <r>01</r><b></b>         :    NOP</pre></p>
+<p><pre>29: Vacio           :</pre></p>
+<p><pre>30: 8008 <r>01</r><b></b>         :    NOP</pre></p>
+<p><pre>31: Vacio           :</pre></p>
+<p><pre>32: 8009 <r>09</r><b></b>         :    DEX</pre></p>
+<p><pre>33: Vacio           :</pre></p>
+<p><pre>34: 800A <r>26</r><b>F7</b>       :    BNE SALTO</pre></p>
+<p><pre>35: Vacio           :</pre></p>
+<p><pre>36: 800C <r>22</r><b>F7</b>       :    BHI SALTO1</pre></p>
+<p><pre>37: Vacio           :</pre></p>
+<p><pre>38: 800E <r>13</r><b>0780F5</b>   :    BRCLR $07,#$80 SALTO2</pre></p>
+<p><pre>39: Vacio           :</pre></p>
+<p><pre>40: 8012 <r>1F</r><b>05AA16</b>   :    BRCLR $05,X,#$AA SALTE</pre></p>
+<p><pre>41: Vacio           :</pre></p>
+<p><pre>42: 8016 <r>12</r><b>7C3312</b>   :    BRSET $7C,#$33 SALTE</pre></p>
+<p><pre>43: Vacio           :</pre></p>
+<p><pre>44: 801A <r>181E</r><b>89400D</b> :    BRSET $89,Y,#$40 SALTE</pre></p>
+<p><pre>45: Vacio           :</pre></p>
+<p><pre>46: 801F <r>15</r><b>5577</b>     :    BCLR $55,#$77</pre></p>
+<p><pre>47: Vacio           :</pre></p>
+<p><pre>48: 8022 <r>14</r><b>4980</b>     :    BSET $49,#$80</pre></p>
+<p><pre>49: Vacio           :</pre></p>
+<p><pre>50: 8025 <r>1D</r><b>7088</b>     :    BCLR $70,X,#$88</pre></p>
+<p><pre>51: Vacio           :</pre></p>
+<p><pre>52: 8028 <r>181C</r><b>917C</b>   :    BSET $91,Y,#$7C</pre></p>
+<p><pre>53: Vacio           :</pre></p>
+<p><pre>54: Vacio           :SALTE</pre></p>
+<p><pre>55: Vacio           :</pre></p>
+<p><pre>56: 802C <r>7E</r><b>8000</b>     :    JMP INICIO</pre></p>
+<p><pre>57: Vacio           :</pre></p>
+<p><pre>58: Vacio           :    END</pre></p>

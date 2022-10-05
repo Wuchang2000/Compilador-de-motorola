@@ -13,9 +13,8 @@ DDRA   EQU   $1001
     LDY $AB
     LDAA $45,X
 
-    LDY $AB
-
 CICLO
+    LDY $AB
 
     BEQ CICLO
 

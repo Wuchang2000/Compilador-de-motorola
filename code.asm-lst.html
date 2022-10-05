@@ -1,0 +1,36 @@
+<html><style type='text/css'>
+html {
+    font-family: Arial;
+    font-size: 16px;
+}
+r {
+    color: #ff0000;
+}
+b {
+    color: #0000ff;
+}
+</style><p><pre>0: Vacio            :DDRA   EQU   $1001</pre></p>
+<p><pre>1: Vacio            :</pre></p>
+<p><pre>2: Vacio            :    ORG $8000</pre></p>
+<p><pre>3: Vacio            :</pre></p>
+<p><pre>4: 8000 <r>01</r><b></b>          :    NOP</pre></p>
+<p><pre>5: Vacio            :</pre></p>
+<p><pre>6: 8001 <r>89</r><b>F0</b>        :    ADCA #$F0</pre></p>
+<p><pre>7: 8003 <r>89</r><b>DDAA</b>      :    ADCA #$DDAA</pre></p>
+<p><pre>8: Vacio            :</pre></p>
+<p><pre>9: 8006 <r>A6</r><b>45</b>        :    LDAA $45,X</pre></p>
+<p><pre>10: 8008 <r>B7</r><b>1001</b>     :    STAA  DDRA</pre></p>
+<p><pre>11: Vacio           :</pre></p>
+<p><pre>12: 800B <r>18DE</r><b>AB</b>     :    LDY $AB</pre></p>
+<p><pre>13: 800E <r>A6</r><b>45</b>       :    LDAA $45,X</pre></p>
+<p><pre>14: Vacio           :</pre></p>
+<p><pre>15: Vacio           :CICLO</pre></p>
+<p><pre>16: 8010 <r>18DE</r><b>AB</b>     :    LDY $AB</pre></p>
+<p><pre>17: Vacio           :</pre></p>
+<p><pre>18: 8013 <r>27</r><b>FB</b>       :    BEQ CICLO</pre></p>
+<p><pre>19: Vacio           :</pre></p>
+<p><pre>20: 8015 <r>B6</r><b>457C</b>     :    LDAA  $457C   *Buenas</pre></p>
+<p><pre>21: Vacio           :</pre></p>
+<p><pre>22: Vacio           :*Buenas </pre></p>
+<p><pre>23: Vacio           :</pre></p>
+<p><pre>24: Vacio           :    END</pre></p>
