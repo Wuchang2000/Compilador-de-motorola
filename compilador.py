@@ -94,7 +94,15 @@ def susValue(file):
             for cont1, j in enumerate(file):
                 if len(list(filter(compile(r'[#,]{0,1}%s$' % pseudo).match, j.split(' ')))) > 0\
                 and 'equ' not in j:
-                    file[cont1] = j.replace(pseudo, value)
+                    if 'clr' not in j:
+                        if search(r'\$[0]{2}', value) != None:
+                            recorte = search(r'\$[0]{2}', value)
+                            t = value[0:recorte.start()+1] + value[recorte.end():]
+                            file[cont1] = j.replace(pseudo, t)
+                        else:
+                            file[cont1] = j.replace(pseudo, value)
+                    else:
+                        file[cont1] = j.replace(pseudo, value)
             # Quitamos la linea con la variable para evitar ruido
             # en analisis posterior
             file[cont] = ''
