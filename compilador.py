@@ -1,3 +1,4 @@
+from random import randint
 from pandas import read_excel as xls
 from re import search, compile
 from numpy import where, array
@@ -376,13 +377,13 @@ def s19():
     # genera el arhivo s19
     with open(f'./{args.f}-s19.html', 'w') as S19:
         # Escribimos el lugar en memoria donde inicia el programa
-        # file.write(f'<{inicio}> ')
         data = ''
         cont = 0
         next_pos = inicio
         S19.write('<html>')
         S19.write(style)
-        S19.write(f'<p><pre><{inicio}> ')
+        S19.write('<p><pre>')
+        data += f'&lt{inicio}&gt '
         # Recorremos el arreglo de operaciones
         for y, i in enumerate(codigo):
             if i != '' and i[2] != 'Etiqueta':
@@ -402,7 +403,7 @@ def s19():
                                 data += f'<r>{" ".join(meirei)}</r>'+\
                                     f'\n&lt{next_pos.upper()}&gt '
                             else:
-                                data += f'<r>{" ".join(meirei)}> </r>'
+                                data += f'<r>{" ".join(meirei)} </r>'
                             cont = 0
                         else:
                             data += f'<r>{" ".join(meirei)} </r>'
@@ -418,7 +419,7 @@ def s19():
                             if verificaLinea(y):
                                 data += f'<r>{meirei}</r>\n&lt{next_pos.upper()}&gt '
                             else:
-                                data += f'<r>{meirei}> </r>'
+                                data += f'<r>{meirei} </r>'
                             cont = 0
                         else:
                             data += f'<r>{meirei} </r>'
@@ -438,7 +439,7 @@ def s19():
                                 data += f'<b>{" ".join(oper)}</b>'+\
                                     f'\n&lt{next_pos.upper()}&gt '
                             else:
-                                data += f'<b>{" ".join(oper)}></b> '
+                                data += f'<b>{" ".join(oper)}</b> '
                             cont = 0
                         else:
                             data += f'<b>{" ".join(oper)} </b>'
@@ -454,7 +455,7 @@ def s19():
                             if verificaLinea(y):
                                 data += f'<b>{oper}</b>\n&lt{next_pos.upper()}&gt '
                             else:
-                                data += f'<b>{oper}> </b>'
+                                data += f'<b>{oper} </b>'
                             cont = 0
                         else:
                             data += f'<b>{oper} </b>'
@@ -467,6 +468,35 @@ def s19():
         S19.write(data)
         S19.write('</pre></p>')
         S19.write('</html>')
+    
+    with open(f'./{args.f}-s19-Motorola.html', 'w') as Moto: 
+        motorola = []
+        data1 = data.split('\n')
+        for x in data1:
+            temp = x.replace('<r>', '')\
+                .replace('</r>', '').replace('&gt', '')\
+                    .replace('<b>', '').replace(' ', '')\
+                        .replace('</b>', '').replace('&lt', '')
+            checksum = hex(randint(0, 255))[2:].upper()
+            if len(checksum) < 2:
+                cont = '0'+cont
+            cont = hex(int((len(temp)+2)/2))[2:].upper()
+            if len(cont) < 2:
+                cont = '0'+cont
+            motorola.append(f'S1{cont}'+x.replace(' ', '')\
+                .replace('&gt', '').replace('&lt', '')+checksum)
+
+        Moto.write('<html>')
+        Moto.write(style)
+        Moto.write('<p><pre>')
+        for x in motorola:
+            Moto.write(x+'\n')
+        checksum = hex(randint(0, 255))[2:].upper()
+        if len(checksum) < 2:
+            cont = '0'+cont
+        Moto.write(f'S9030000{checksum}')
+        Moto.write('</pre></p>')
+        Moto.write('</html>')
 
 def posicionMemory(i):
     cont = 0
@@ -803,3 +833,4 @@ else:
     print('SUCCES')
     Lst()
     s19()
+    # Motorola()
