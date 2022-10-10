@@ -426,21 +426,21 @@ b {
 <p><pre>414: 8229 <r>8F</r><b></b>        :      XGDX</pre></p>
 <p><pre>415: Vacio          :</pre></p>
 <p><pre>416: Vacio          :BNBCD</pre></p>
-<p><pre>417: 822A <r>CE</r><b>64</b>      :      LDX  #$64</pre></p>
-<p><pre>418: 822C <r>02</r><b></b>        :      IDIV</pre></p>
-<p><pre>419: 822D <r>8F</r><b></b>        :      XGDX</pre></p>
-<p><pre>420: 822E <r>D7</r><b>10</b>      :      STAB U3</pre></p>
-<p><pre>421: 8230 <r>8F</r><b></b>        :      XGDX</pre></p>
-<p><pre>422: 8231 <r>CE</r><b>0A</b>      :      LDX  #$A</pre></p>
-<p><pre>423: 8233 <r>02</r><b></b>        :      IDIV</pre></p>
-<p><pre>424: 8234 <r>8F</r><b></b>        :      XGDX</pre></p>
-<p><pre>425: 8235 <r>D7</r><b>11</b>      :      STAB U4</pre></p>
-<p><pre>426: 8237 <r>8F</r><b></b>        :      XGDX</pre></p>
-<p><pre>427: 8238 <r>D7</r><b>12</b>      :      STAB U5</pre></p>
+<p><pre>417: 822A <r>CE</r><b>0064</b>    :      LDX  #$64</pre></p>
+<p><pre>418: 822D <r>02</r><b></b>        :      IDIV</pre></p>
+<p><pre>419: 822E <r>8F</r><b></b>        :      XGDX</pre></p>
+<p><pre>420: 822F <r>D7</r><b>10</b>      :      STAB U3</pre></p>
+<p><pre>421: 8231 <r>8F</r><b></b>        :      XGDX</pre></p>
+<p><pre>422: 8232 <r>CE</r><b>000A</b>    :      LDX  #$A</pre></p>
+<p><pre>423: 8235 <r>02</r><b></b>        :      IDIV</pre></p>
+<p><pre>424: 8236 <r>8F</r><b></b>        :      XGDX</pre></p>
+<p><pre>425: 8237 <r>D7</r><b>11</b>      :      STAB U4</pre></p>
+<p><pre>426: 8239 <r>8F</r><b></b>        :      XGDX</pre></p>
+<p><pre>427: 823A <r>D7</r><b>12</b>      :      STAB U5</pre></p>
 <p><pre>428: Vacio          :</pre></p>
 <p><pre>429: Vacio          :</pre></p>
 <p><pre>430: Vacio          :</pre></p>
-<p><pre>431: 823A <r>39</r><b></b>        :      RTS</pre></p>
+<p><pre>431: 823C <r>39</r><b></b>        :      RTS</pre></p>
 <p><pre>432: Vacio          :</pre></p>
 <p><pre>433: Vacio          :</pre></p>
 <p><pre>434: Vacio          :</pre></p>
@@ -468,21 +468,21 @@ b {
 <p><pre>456: Vacio          :</pre></p>
 <p><pre>457: F110 <r>CE</r><b>1025</b>    :      LDX #TFLG2</pre></p>
 <p><pre>458: F113 <r>1C</r><b>0040</b>    :      BSET $00,X,#$40    * BORRA BANDERA INTERRUPCION</pre></p>
-<p><pre>459: F116 <r>7A</r><b>18</b>      :      DEC TEMPO</pre></p>
-<p><pre>460: F118 <r>27</r><b>01</b>      :      BEQ SEGUNDO</pre></p>
+<p><pre>459: F116 <r>7A</r><b>0018</b>    :      DEC TEMPO</pre></p>
+<p><pre>460: F119 <r>27</r><b>01</b>      :      BEQ SEGUNDO</pre></p>
 <p><pre>461: Vacio          :      </pre></p>
 <p><pre>462: Vacio          :     </pre></p>
-<p><pre>463: F11A <r>3B</r><b></b>        :      RTI</pre></p>
+<p><pre>463: F11B <r>3B</r><b></b>        :      RTI</pre></p>
 <p><pre>464: Vacio          :</pre></p>
 <p><pre>465: Vacio          :SEGUNDO</pre></p>
-<p><pre>466: F11B <r>86</r><b>FF</b>      :      LDAA #$FF</pre></p>
-<p><pre>467: F11D <r>97</r><b>0D</b>      :      STAA SEG           * SEG ES UNA BANDERA DE SEGUNDO    </pre></p>
-<p><pre>468: F11F <r>86</r><b>F4</b>      :      LDAA #$F4         </pre></p>
-<p><pre>469: F121 <r>97</r><b>18</b>      :      STAA TEMPO         * TEMPO ES VARIABLE PARA CONTAR 244 CICLOS</pre></p>
-<p><pre>470: F123 <r>7C</r><b>1002</b>    :      INC  PORTG</pre></p>
+<p><pre>466: F11C <r>86</r><b>FF</b>      :      LDAA #$FF</pre></p>
+<p><pre>467: F11E <r>97</r><b>0D</b>      :      STAA SEG           * SEG ES UNA BANDERA DE SEGUNDO    </pre></p>
+<p><pre>468: F120 <r>86</r><b>F4</b>      :      LDAA #$F4         </pre></p>
+<p><pre>469: F122 <r>97</r><b>18</b>      :      STAA TEMPO         * TEMPO ES VARIABLE PARA CONTAR 244 CICLOS</pre></p>
+<p><pre>470: F124 <r>7C</r><b>1002</b>    :      INC  PORTG</pre></p>
 <p><pre>471: Vacio          :     </pre></p>
 <p><pre>472: Vacio          :      </pre></p>
-<p><pre>473: F126 <r>3B</r><b></b>        :      RTI</pre></p>
+<p><pre>473: F127 <r>3B</r><b></b>        :      RTI</pre></p>
 <p><pre>474: Vacio          :***********************************</pre></p>
 <p><pre>475: Vacio          :* VECTOR INTERRUPCION SERIAL</pre></p>
 <p><pre>476: Vacio          :***********************************</pre></p>

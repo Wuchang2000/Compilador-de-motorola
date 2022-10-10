@@ -1,0 +1,11 @@
+PACTL  EQU   $1026
+
+    ORG   $8000
+    LDAA  #SEI
+    LDS   $PACTLO
+    BEQ LOL
+    POLI
+    LDAA
+    TAP $FA
+    LDAA $FFFFFF
+LDAA $78

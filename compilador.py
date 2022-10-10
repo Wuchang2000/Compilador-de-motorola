@@ -94,7 +94,7 @@ def susValue(file):
             for cont1, j in enumerate(file):
                 if len(list(filter(compile(r'[#,]{0,1}%s$' % pseudo).match, j.split(' ')))) > 0\
                 and 'equ' not in j:
-                    if 'clr' not in j:
+                    if 'clr' not in j and 'dec' not in j:
                         if search(r'\$[0]{2}', value) != None:
                             recorte = search(r'\$[0]{2}', value)
                             t = value[0:recorte.start()+1] + value[recorte.end():]
@@ -170,6 +170,9 @@ def corresponde(instruccion, line, clase):
                 return [instruccion, clase, loc]
             # Extraemos el valor del operando
             memory = formaterMemory(loc)
+    if instruccion == 'ldx':
+        if len(memory) <= 2:
+            memory = '0'*(4-len(memory))+memory
     # Subrutinas
     if 'FCB' in clase:
         # Quitamos los espacios del inicio de la instruccion
@@ -487,7 +490,7 @@ def s19():
                         .replace('</b>', '').replace('&lt', '')
             checksum = hex(randint(0, 255))[2:].upper()
             if len(checksum) < 2:
-                cont = '0'+cont
+                checksum = '0'+checksum
             cont = hex(int((len(temp)+2)/2))[2:].upper()
             if len(cont) < 2:
                 cont = '0'+cont
@@ -501,7 +504,7 @@ def s19():
             Moto.write(x+'\n')
         checksum = hex(randint(0, 255))[2:].upper()
         if len(checksum) < 2:
-            cont = '0'+cont
+            checksum = '0'+checksum
         Moto.write(f'S9030000{checksum}')
         Moto.write('</pre></p>')
         Moto.write('</html>')
@@ -712,7 +715,7 @@ def saltos():
 # Datos mostrados al usuario
 parser = arg.ArgumentParser(prog='Compilador para el micro MC68HC11',\
     description='Si el codigo esta bien, se crearan dos archivos html,'
-        +' en caso de encontrar algun error se creara un txt.',
+        +' en caso de encontrar algun error se imprimira en pantalla',
         formatter_class=arg.RawTextHelpFormatter)
 # Argumentos esperados
 parser.add_argument('-f', metavar='Archivo.asm',type=str,\
@@ -817,25 +820,18 @@ if errores:
     contError = 0
     # Aviso de error
     print('ERROR')
-    # Se crea un archivo especial para marcar los errores
-    with open('errores.txt', 'w') as correct:
     # Se vuelve a recorrer el archivo inicial
-        with open(args.f) as file:
-            file = array([x[1] for x in enumerate(file)])
-            for cont, i in enumerate(file):
-                # Se escribe el mismo codigo
-                correct.write(f'{i}')
-                # Se escribe el error si existe
-                if 'ERROR' in info[cont]:
-                    if cont != len(file)-1:
-                        correct.write(f'{error[str(info[cont][3])]}\n')
-                    else:
-                        correct.write(f'\n{error[str(info[cont][3])]}\n')
-                    contError += 1
-            # Error por falta de end
-            if len(info) > len(file):
-                correct.write(f'\n{error[str(info[len(info)-1][1])]}')
+    with open(args.f) as file:
+        file = array([x[1] for x in enumerate(file)])
+        for cont, i in enumerate(file):
+            # Se escribe el error si existe
+            if 'ERROR' in info[cont]:
+                print(f'Error {info[cont][3]} en linea {cont}:{error[str(info[cont][3])]}')
                 contError += 1
+        # Error por falta de end
+        if len(info) > len(file):
+            print(f'Error {info[len(info)-1][1]} en linea {len(info)}:{error[str(info[len(info)-1][1])]}')
+            contError += 1
     print(f'Se encontro {contError} error' if contError == 1 else f'Se encontro {contError} errores')
 else:
     print('SUCCES')
