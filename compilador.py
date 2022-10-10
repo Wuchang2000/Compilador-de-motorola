@@ -833,4 +833,3 @@ else:
     print('SUCCES')
     Lst()
     s19()
-    # Motorola()
