@@ -718,8 +718,8 @@ parser = arg.ArgumentParser(prog='Compilador para el micro MC68HC11',\
         +' en caso de encontrar algun error se imprimira en pantalla',
         formatter_class=arg.RawTextHelpFormatter)
 # Argumentos esperados
-parser.add_argument('-f', metavar='Archivo.asm',type=str,\
-    help='Ej.   "-f ./archivo.asm" ', default = None)
+parser.add_argument('-f', metavar='Archivo.asc/asm',type=str,\
+    help='Ej.   "-f ./archivo.asc/asm" ', default = None)
 args = parser.parse_args()
 if args.f is None:
     parser.print_help()
